@@ -13,5 +13,3 @@ ALL_MOVES = (
     | ALL_BISHOP_MOVES
     | ALL_QUEEN_MOVES
 )
-
-print(len(ALL_MOVES))
