@@ -26,48 +26,11 @@ def rook_single_disambiguation_captures(squares: set[str]) -> set[str]:
         if file != square[1]
     }
     return disambiguation_rank | disambiguation_file
-
-
-def rook_double_disambiguation(squares: set[str]) -> set[str]:
-    possible_squares_horizontal = {
-        "R" + square + x
-        for x in squares
-        for square in capture_horizontally(x)
-        if x not in ROOK_DOUBLE_DISAMBIGUATION_EXCEPTION
-    }
-    possible_squares_vertical = {
-        "R" + square + x
-        for x in squares
-        for square in capture_vertically(x)
-        if x not in ROOK_DOUBLE_DISAMBIGUATION_EXCEPTION
-    }
-    return possible_squares_horizontal | possible_squares_vertical
-
-
-print(rook_double_disambiguation(SQUARES))
-
-
-def rook_double_disambiguation_captures(squares: set[str]) -> set[str]:
-    possible_squares_horizontal = {
-        "R" + square + "x" + x
-        for x in squares
-        for square in capture_horizontally(x)
-        if x not in ROOK_DOUBLE_DISAMBIGUATION_EXCEPTION
-    }
-    possible_squares_vertical = {
-        "R" + square + "x" + x
-        for x in squares
-        for square in capture_vertically(x)
-        if x not in ROOK_DOUBLE_DISAMBIGUATION_EXCEPTION
-    }
-    return possible_squares_horizontal | possible_squares_vertical
-
+     
 
 ALL_ROOK_MOVES = add_checks(
     ROOK_NORMAL_MOVES
     | ROOK_NORMAL_CAPTURES
     | rook_single_disambiguation(SQUARES)
     | rook_single_disambiguation_captures(SQUARES)
-    | rook_double_disambiguation(SQUARES)
-    | rook_double_disambiguation_captures(SQUARES)
 )
