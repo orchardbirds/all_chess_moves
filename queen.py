@@ -12,7 +12,9 @@ QUEEN_NORMAL_CAPTURES = {"Qx" + square for square in SQUARES}
 
 def queen_single_disambiguation(squares: set[str]) -> set[str]:
     disambiguation_rank = {"Q" + rank + square for rank in RANKS for square in squares}
-    disambiguation_file = {"Q" + file + square for file in FILES for square in squares}
+    disambiguation_file = {
+        "Q" + file + square for file in FILES for square in squares if file != square[1]
+    }
     return disambiguation_rank | disambiguation_file
 
 
@@ -21,7 +23,10 @@ def queen_single_disambiguation_captures(squares: set[str]) -> set[str]:
         "Q" + rank + "x" + square for rank in RANKS for square in squares
     }
     disambiguation_file = {
-        "Q" + file + "x" + square for file in FILES for square in squares
+        "Q" + file + "x" + square
+        for file in FILES
+        for square in squares
+        if file != square
     }
     return disambiguation_rank | disambiguation_file
 
