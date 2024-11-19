@@ -1,5 +1,5 @@
 from board import SQUARES, FILES, RANKS
-from captures import add_checks
+from captures import add_checks, remove_checks_corners
 
 ROOK_NORMAL_MOVES = {"R" + square for square in SQUARES}
 ROOK_NORMAL_CAPTURES = {"Rx" + square for square in SQUARES}
@@ -37,9 +37,10 @@ def rook_single_disambiguation_captures(squares: set[str]) -> set[str]:
     return disambiguations
 
 
-ALL_ROOK_MOVES = add_checks(
+moves = add_checks(
     ROOK_NORMAL_MOVES
     | ROOK_NORMAL_CAPTURES
     | rook_single_disambiguation(SQUARES)
     | rook_single_disambiguation_captures(SQUARES)
 )
+ALL_ROOK_MOVES = {move for move in moves if remove_checks_corners(move)}

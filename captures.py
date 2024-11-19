@@ -1,4 +1,4 @@
-from board import SQUARES
+from board import SQUARES, CORNER_SQUARES
 
 
 def capture_diagonally(square):
@@ -99,6 +99,13 @@ def add_checks(moves: set[str]) -> set[str]:
     moves_check = {move + "+" for move in moves}
     moves_checkmate = {move + "#" for move in moves}
     return moves | moves_check | moves_checkmate
+
+
+def remove_checks_corners(move: str) -> bool:
+    "Moves such as Rba1# are not possible"
+    if move[-1] in ["+", "#"] and move[-3:-1] in CORNER_SQUARES:
+        return False
+    return True
 
 
 DIAGONAL_CAPTURES = {square: capture_diagonally(square) for square in SQUARES}
