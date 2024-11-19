@@ -4,6 +4,7 @@ from captures import (
     capture_vertically,
     capture_diagonally,
     add_checks,
+    remove_checks_corners,
 )
 
 QUEEN_NORMAL_MOVES = {"Q" + square for square in SQUARES}
@@ -106,11 +107,18 @@ def queen_double_disambiguation_captures(squares: set[str]) -> set[str]:
     }
 
 
-ALL_QUEEN_MOVES = add_checks(
-    QUEEN_NORMAL_MOVES
-    | QUEEN_NORMAL_CAPTURES
-    | queen_single_disambiguation(SQUARES)
-    | queen_single_disambiguation_captures(SQUARES)
-    | queen_double_disambiguation(SQUARES)
-    | queen_double_disambiguation_captures(SQUARES)
+double_disambiguations = add_checks(
+    queen_double_disambiguation(SQUARES) | queen_double_disambiguation_captures(SQUARES)
+)
+double_disambiguations = {
+    move for move in double_disambiguations if remove_checks_corners(move)
+}
+ALL_QUEEN_MOVES = (
+    add_checks(
+        QUEEN_NORMAL_MOVES
+        | QUEEN_NORMAL_CAPTURES
+        | queen_single_disambiguation(SQUARES)
+        | queen_single_disambiguation_captures(SQUARES)
+    )
+    | double_disambiguations
 )
