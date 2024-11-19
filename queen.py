@@ -31,6 +31,33 @@ def queen_single_disambiguation_captures(squares: set[str]) -> set[str]:
     return disambiguation_rank | disambiguation_file
 
 
+def _is_allowed_double_disambiguations(
+    disambiguation: str, disambiguation_indices: tuple[int, int] = (3, 5)
+) -> bool:
+    start, finish = disambiguation_indices
+    if disambiguation[start:finish] == "a1":
+        if disambiguation[2] == "1":
+            return False
+        if disambiguation[1] == "a":
+            return False
+    elif disambiguation[start:finish] == "a8":
+        if disambiguation[2] == "8":
+            return False
+        if disambiguation[1] == "a":
+            return False
+    elif disambiguation[start:finish] == "h1":
+        if disambiguation[2] == "1":
+            return False
+        if disambiguation[1] == "h":
+            return False
+    elif disambiguation[start:finish] == "h8":
+        if disambiguation[2] == "8":
+            return False
+        if disambiguation[1] == "h":
+            return False
+    return True
+
+
 def queen_double_disambiguation(squares: set[str]) -> set[str]:
     possible_squares_horizontal = {
         "Q" + square + x for x in squares for square in capture_horizontally(x)
@@ -41,11 +68,18 @@ def queen_double_disambiguation(squares: set[str]) -> set[str]:
     possible_squares_diagonal = {
         "Q" + square + x for x in squares for square in capture_diagonally(x)
     }
-    return (
-        possible_squares_horizontal
+    disambiguations = (
+        possible_squares_diagonal
+        | possible_squares_horizontal
         | possible_squares_vertical
-        | possible_squares_diagonal
     )
+    return {
+        disambiguation
+        for disambiguation in disambiguations
+        if _is_allowed_double_disambiguations(
+            disambiguation, disambiguation_indices=(3, 5)
+        )
+    }
 
 
 def queen_double_disambiguation_captures(squares: set[str]) -> set[str]:
@@ -58,11 +92,18 @@ def queen_double_disambiguation_captures(squares: set[str]) -> set[str]:
     possible_squares_diagonal = {
         "Q" + square + "x" + x for x in squares for square in capture_diagonally(x)
     }
-    return (
-        possible_squares_horizontal
+    disambiguations = (
+        possible_squares_diagonal
+        | possible_squares_horizontal
         | possible_squares_vertical
-        | possible_squares_diagonal
     )
+    return {
+        disambiguation
+        for disambiguation in disambiguations
+        if _is_allowed_double_disambiguations(
+            disambiguation, disambiguation_indices=(4, 6)
+        )
+    }
 
 
 ALL_QUEEN_MOVES = add_checks(
